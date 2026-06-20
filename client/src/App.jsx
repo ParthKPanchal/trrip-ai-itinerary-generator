@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
@@ -8,12 +9,28 @@ import Trips from "./pages/Trips";
 import TripDetails from "./pages/TripDetails";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
+
 function App() {
   return (
     <BrowserRouter>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#0F1024",
+            color: "#ffffff",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: "12px",
+          },
+        }}
+      />
+
       <Routes>
         <Route path="/" element={<Login />} />
+
         <Route path="/register" element={<Register />} />
+
         <Route
           path="/dashboard"
           element={
@@ -22,6 +39,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/upload"
           element={
@@ -30,6 +48,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/trips"
           element={
@@ -38,6 +57,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/trips/:id"
           element={
@@ -50,4 +70,5 @@ function App() {
     </BrowserRouter>
   );
 }
+
 export default App;

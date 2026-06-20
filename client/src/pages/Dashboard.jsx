@@ -5,6 +5,8 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import BentoCard from "../components/BentoCard";
 import api from "../services/api";
 
+import toast from "react-hot-toast";
+
 const Dashboard = () => {
   const [trips, setTrips] = useState([]);
 
@@ -23,16 +25,19 @@ const Dashboard = () => {
       setTrips(response.data);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to load dashboard data");
     }
   };
 
   useEffect(() => {
     fetchTrips();
+
+    document.title = "Dashboard | Trrip Travels";
   }, []);
 
   return (
     <DashboardLayout>
-      <h1 className="text-white text-4xl font-bold mb-8">
+      <h1 className="text-white text-3xl md:text-4xl font-bold mb-8">
         Dashboard
       </h1>
 
@@ -45,15 +50,39 @@ const Dashboard = () => {
             </h2>
 
             <p className="text-slate-400">
-              Total Trips: {trips.length}
+              Manage your trips and generate AI-powered travel itineraries.
             </p>
 
-            <p className="text-slate-400 mt-2">
-              Latest Trip:{" "}
-              {trips.length > 0
-                ? trips[0].fileName
-                : "No Trips Yet"}
-            </p>
+            <div className="mt-6 flex gap-8">
+              <div>
+                <p className="text-slate-500 text-sm">
+                  Total Trips
+                </p>
+
+                <p className="text-white text-2xl font-bold">
+                  {trips.length}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-slate-500 text-sm">
+                  Latest Trip
+                </p>
+
+                <p
+                  className="text-white font-medium truncate max-w-[200px]"
+                  title={
+                    trips.length > 0
+                      ? trips[0].fileName
+                      : "No Trips Yet"
+                  }
+                >
+                  {trips.length > 0
+                    ? trips[0].fileName
+                    : "No Trips Yet"}
+                </p>
+              </div>
+            </div>
           </BentoCard>
         </div>
 
@@ -64,9 +93,10 @@ const Dashboard = () => {
               Upload Travel PDF
             </h2>
 
-            <p className="text-slate-400 mb-4">
-              Upload flight tickets,
-              hotel bookings or travel plans.
+            <p className="text-slate-400 mb-5">
+              Upload flight tickets, hotel bookings,
+              or travel plans and let Gemini AI
+              create your itinerary.
             </p>
 
             <button
@@ -79,14 +109,16 @@ const Dashboard = () => {
                 py-3
                 rounded-xl
                 text-white
+                hover:scale-105
+                transition
               "
             >
-              Upload Now
+              ✨ Upload Now
             </button>
           </BentoCard>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats */}
         <BentoCard
           title="Total Trips"
           value={trips.length}
@@ -94,7 +126,7 @@ const Dashboard = () => {
 
         <BentoCard
           title="AI Powered"
-          value="Gemini AI"
+          value="Gemini"
         />
 
         <BentoCard
@@ -103,7 +135,7 @@ const Dashboard = () => {
         />
 
         <BentoCard
-          title="Account Status"
+          title="Status"
           value="Active"
         />
 
@@ -136,7 +168,10 @@ const Dashboard = () => {
                       transition
                     "
                   >
-                    <div className="font-semibold">
+                    <div
+                      className="font-semibold truncate"
+                      title={trip.fileName}
+                    >
                       {trip.fileName}
                     </div>
 
@@ -152,27 +187,40 @@ const Dashboard = () => {
           </BentoCard>
         </div>
 
-        {/* Latest Trip Card */}
+        {/* Latest Trip */}
         <div className="lg:col-span-1">
           <BentoCard>
             <div className="flex flex-col items-center text-center">
               <div
                 className="
-                  w-20
-                  h-20
+                  w-24
+                  h-24
                   rounded-full
                   bg-gradient-to-r
                   from-purple-500
                   to-fuchsia-500
+                  flex
+                  items-center
+                  justify-center
+                  text-3xl
                   mb-4
                 "
-              ></div>
+              >
+                ✈️
+              </div>
 
               <h3 className="text-white font-bold mb-2">
                 Latest Trip
               </h3>
 
-              <p className="text-slate-400 text-sm">
+              <p
+                className="text-slate-400 text-sm break-words"
+                title={
+                  trips.length > 0
+                    ? trips[0].fileName
+                    : "No Trips"
+                }
+              >
                 {trips.length > 0
                   ? trips[0].fileName
                   : "No Trips"}

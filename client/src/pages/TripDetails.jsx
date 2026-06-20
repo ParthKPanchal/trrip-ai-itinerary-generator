@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+
 import DashboardLayout from "../layouts/DashboardLayout";
+import BentoCard from "../components/BentoCard";
 import api from "../services/api";
+
 import ReactMarkdown from "react-markdown";
+import toast from "react-hot-toast";
 
 const TripDetails = () => {
   const { id } = useParams();
@@ -23,6 +27,7 @@ const TripDetails = () => {
       setTrip(response.data);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to load trip details");
     }
   };
 
@@ -36,18 +41,23 @@ const TripDetails = () => {
     try {
       const token = localStorage.getItem("token");
 
-      await api.delete(`/itinerary/${id}`, {
+      const deletePromise = api.delete(`/itinerary/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      alert("Trip Deleted Successfully");
+      toast.promise(deletePromise, {
+        loading: "Deleting trip...",
+        success: "Trip deleted successfully",
+        error: "Failed to delete trip",
+      });
+
+      await deletePromise;
 
       navigate("/trips");
     } catch (error) {
       console.log(error);
-      alert("Failed To Delete Trip");
     }
   };
 
@@ -57,61 +67,82 @@ const TripDetails = () => {
 
       await navigator.clipboard.writeText(shareUrl);
 
-      alert("Trip Link Copied Successfully");
+      toast.success("Trip link copied to clipboard");
     } catch (error) {
       console.log(error);
-      alert("Failed To Copy Link");
+      toast.error("Failed to copy link");
     }
   };
 
   useEffect(() => {
     fetchTrip();
+
+    document.title = "Trip Details | Trrip Travels";
   }, []);
 
   if (!trip) {
     return (
       <DashboardLayout>
-        <h2 className="text-white text-2xl">
-          Loading...
-        </h2>
+        <div className="text-center py-20">
+          <div className="text-6xl mb-4">✈️</div>
+
+          <h2 className="text-white text-2xl font-bold">
+            Loading Trip...
+          </h2>
+
+          <p className="text-slate-400 mt-2">
+            Fetching itinerary details
+          </p>
+        </div>
       </DashboardLayout>
     );
   }
 
   return (
     <DashboardLayout>
-      <h2 className="text-4xl font-bold text-white mb-8">
+      <button
+        onClick={() => navigate("/trips")}
+        className="
+          text-purple-400
+          hover:text-purple-300
+          mb-4
+        "
+      >
+        ← Back To Trips
+      </button>
+
+      <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
         Trip Details
       </h2>
 
-      <div
-        className="
-          bg-[#0F1024]
-          border
-          border-white/10
-          rounded-3xl
-          p-8
-        "
-      >
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl text-white font-semibold">
+      <BentoCard>
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-5 mb-6">
+          <h3
+            className="
+              text-xl
+              md:text-2xl
+              text-white
+              font-semibold
+              break-all
+            "
+          >
             {trip.fileName}
           </h3>
 
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <button
               onClick={handleShare}
               className="
                 bg-purple-600
                 hover:bg-purple-700
-                px-4
+                px-5
                 py-2
                 rounded-xl
                 text-white
                 transition
               "
             >
-              Share Trip
+              🔗 Share Trip
             </button>
 
             <button
@@ -119,23 +150,39 @@ const TripDetails = () => {
               className="
                 bg-red-600
                 hover:bg-red-700
-                px-4
+                px-5
                 py-2
                 rounded-xl
                 text-white
                 transition
               "
             >
-              Delete Trip
+              🗑️ Delete Trip
             </button>
           </div>
         </div>
 
-        <p className="text-slate-400 mb-8">
+        <p className="text-slate-400 mb-4">
           Created:{" "}
           {new Date(trip.createdAt).toLocaleDateString()}
         </p>
 
+        <div className="mb-8">
+          <span
+            className="
+              bg-green-500/20
+              text-green-400
+              px-3
+              py-1
+              rounded-full
+              text-sm
+            "
+          >
+            AI Generated with Gemini
+          </span>
+        </div>
+
+        {/* AI Itinerary */}
         <div className="mb-10">
           <h4 className="text-xl text-purple-400 mb-4">
             Generated Itinerary
@@ -146,6 +193,7 @@ const TripDetails = () => {
               prose
               prose-invert
               max-w-none
+              text-slate-200
             "
           >
             <ReactMarkdown>
@@ -154,6 +202,7 @@ const TripDetails = () => {
           </div>
         </div>
 
+        {/* PDF Data */}
         <div>
           <h4 className="text-xl text-purple-400 mb-4">
             Extracted PDF Data
@@ -164,15 +213,17 @@ const TripDetails = () => {
               text-slate-300
               whitespace-pre-wrap
               bg-[#16182F]
-              p-4
-              rounded-xl
+              p-5
+              rounded-2xl
               overflow-auto
+              max-h-[500px]
+              text-sm
             "
           >
             {trip.extractedText}
           </pre>
         </div>
-      </div>
+      </BentoCard>
     </DashboardLayout>
   );
 };

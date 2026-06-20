@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import DashboardLayout from "../layouts/DashboardLayout";
+import BentoCard from "../components/BentoCard";
 import api from "../services/api";
+
+import toast from "react-hot-toast";
 
 const Trips = () => {
   const [trips, setTrips] = useState([]);
@@ -22,6 +25,7 @@ const Trips = () => {
       setTrips(response.data);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to load trips");
     }
   };
 
@@ -37,85 +41,129 @@ const Trips = () => {
     try {
       const token = localStorage.getItem("token");
 
-      await api.delete(`/itinerary/${tripId}`, {
+      const deletePromise = api.delete(`/itinerary/${tripId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      alert("Trip Deleted Successfully");
+      toast.promise(deletePromise, {
+        loading: "Deleting trip...",
+        success: "Trip deleted successfully",
+        error: "Failed to delete trip",
+      });
+
+      await deletePromise;
 
       fetchTrips();
     } catch (error) {
       console.log(error);
-      alert("Delete Failed");
     }
   };
 
   useEffect(() => {
     fetchTrips();
+
+    document.title = "My Trips | Trrip Travels";
   }, []);
 
   return (
     <DashboardLayout>
-      <h2 className="text-4xl font-bold text-white mb-8">
+      <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
         My Trips
       </h2>
 
-      {trips.length === 0 ? (
-        <div className="text-center py-20">
-          <h2 className="text-2xl text-white mb-4">
-            No Trips Yet ✈️
-          </h2>
+      <p className="text-slate-400 mb-8">
+        Total Trips: {trips.length}
+      </p>
 
-          <p className="text-slate-400">
-            Upload your first PDF to generate an itinerary.
-          </p>
-        </div>
-      ) : (
-        <div className="grid md:grid-cols-2 gap-6">
-          {trips.map((trip) => (
-            <div
-              key={trip._id}
-              onClick={() => navigate(`/trips/${trip._id}`)}
+      {trips.length === 0 ? (
+        <BentoCard>
+          <div className="text-center py-12">
+            <div className="text-7xl mb-6">✈️</div>
+
+            <h2 className="text-3xl font-bold text-white mb-4">
+              No Trips Yet
+            </h2>
+
+            <p className="text-slate-400 max-w-md mx-auto mb-8">
+              Upload your flight tickets, hotel reservations,
+              or travel booking PDFs and let Gemini AI create
+              a complete travel itinerary for you.
+            </p>
+
+            <button
+              onClick={() => navigate("/upload")}
               className="
-                bg-[#0F1024]
-                border
-                border-white/10
-                rounded-3xl
-                p-6
-                cursor-pointer
-                hover:border-purple-500
-                hover:scale-[1.02]
-                transition
+                bg-gradient-to-r
+                from-purple-600
+                to-fuchsia-600
+                px-8
+                py-3
+                rounded-xl
+                text-white
+                font-medium
               "
             >
-              <h3 className="text-xl font-semibold text-white">
-                {trip.fileName}
-              </h3>
+              🚀 Upload First Trip
+            </button>
+          </div>
+        </BentoCard>
+      ) : (
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {trips.map((trip) => (
+            <BentoCard key={trip._id}>
+              <div
+                onClick={() => navigate(`/trips/${trip._id}`)}
+                className="cursor-pointer"
+              >
+                <h3
+                  className="
+                    text-lg
+                    font-semibold
+                    text-white
+                    break-words
+                    line-clamp-2
+                  "
+                  title={trip.fileName}
+                >
+                  {trip.fileName}
+                </h3>
 
-              <p className="text-slate-400 mt-2 mb-4">
-                {new Date(
-                  trip.createdAt
-                ).toLocaleDateString()}
-              </p>
+                <p className="text-slate-400 mt-3">
+                  {new Date(
+                    trip.createdAt
+                  ).toLocaleDateString()}
+                </p>
+
+                <p className="text-purple-400 text-sm mt-4">
+                  AI Generated Itinerary
+                </p>
+
+                <p className="text-slate-500 text-xs mt-1">
+                  Click to view complete trip details →
+                </p>
+              </div>
 
               <button
                 onClick={(e) =>
                   handleDelete(trip._id, e)
                 }
                 className="
+                  mt-5
+                  w-full
                   bg-red-600
                   hover:bg-red-700
                   text-white
                   px-4
                   py-2
                   rounded-xl
+                  transition
                 "
               >
                 Delete Trip
               </button>
-            </div>
+            </BentoCard>
           ))}
         </div>
       )}
