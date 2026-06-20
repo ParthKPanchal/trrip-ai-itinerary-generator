@@ -1,15 +1,21 @@
 import { useState } from "react";
-import DashboardLayout from "../layouts/DashboardLayout";
-import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 
-const Upload = () => {
-  const navigate = useNavigate(); // ✅ Inside component
+import DashboardLayout from "../layouts/DashboardLayout";
+import api from "../services/api";
 
-  const [loading, setLoading] = useState(false);
+const Upload = () => {
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a PDF file");
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -35,6 +41,7 @@ const Upload = () => {
       navigate("/trips");
     } catch (error) {
       console.log(error);
+
       alert("Upload Failed");
     } finally {
       setLoading(false);
@@ -60,7 +67,9 @@ const Upload = () => {
           type="file"
           accept=".pdf"
           className="text-white"
-          onChange={(e) => setFile(e.target.files[0])}
+          onChange={(e) =>
+            setFile(e.target.files[0])
+          }
         />
 
         <button
@@ -75,9 +84,12 @@ const Upload = () => {
             py-3
             rounded-xl
             text-white
+            disabled:opacity-50
           "
         >
-          {loading ? "Generating..." : "Upload PDF"}
+          {loading
+            ? "✨ Generating AI Itinerary..."
+            : "Upload PDF"}
         </button>
       </div>
     </DashboardLayout>

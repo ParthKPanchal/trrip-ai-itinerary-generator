@@ -8,7 +8,10 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
-
+const uploadRoutes = require("./routes/uploadRoutes")
+const protect = require("./middleware/authMiddleware");
+const { verify } = require("jsonwebtoken");
+const itineraryRoutes = require("./routes/itineraryRoutes");
 // Create our server
 const app = express();
 
@@ -20,7 +23,22 @@ app.use(cors());
 // Understand JSON data sent by frontend.
 app.use(express.json());
 
+// For Login and Registeration
 app.use("/api/auth",authRoutes);
+
+// for uploading files
+app.use("/api/upload",uploadRoutes);
+
+// Read file which is uploaded in upload folder
+app.use("/api/itinerary", itineraryRoutes);
+
+// to verify by middleware is loggined user or not
+app.get("/api/profile", protect, (req, res) => {
+  res.json({
+    message: "Welcome User",
+    user: req.user,
+  });
+});
 
 app.get("/", (req, res) => {
   res.send("Server is runnning");
