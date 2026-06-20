@@ -19,17 +19,17 @@ const Trips = () => {
         },
       });
 
-      console.log(response.data);
-
       setTrips(response.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (tripId, e) => {
+    e.stopPropagation();
+
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this itinerary?",
+      "Are you sure you want to delete this itinerary?"
     );
 
     if (!confirmDelete) return;
@@ -37,7 +37,7 @@ const Trips = () => {
     try {
       const token = localStorage.getItem("token");
 
-      await api.delete(`/itinerary/${id}`, {
+      await api.delete(`/itinerary/${tripId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,9 +45,10 @@ const Trips = () => {
 
       alert("Trip Deleted Successfully");
 
-      navigate("/trips");
+      fetchTrips();
     } catch (error) {
       console.log(error);
+      alert("Delete Failed");
     }
   };
 
@@ -57,11 +58,15 @@ const Trips = () => {
 
   return (
     <DashboardLayout>
-      <h2 className="text-4xl font-bold text-white mb-8">My Trips</h2>
+      <h2 className="text-4xl font-bold text-white mb-8">
+        My Trips
+      </h2>
 
       {trips.length === 0 ? (
         <div className="text-center py-20">
-          <h2 className="text-2xl text-white mb-4">No Trips Yet ✈️</h2>
+          <h2 className="text-2xl text-white mb-4">
+            No Trips Yet ✈️
+          </h2>
 
           <p className="text-slate-400">
             Upload your first PDF to generate an itinerary.
@@ -88,24 +93,28 @@ const Trips = () => {
               <h3 className="text-xl font-semibold text-white">
                 {trip.fileName}
               </h3>
+
+              <p className="text-slate-400 mt-2 mb-4">
+                {new Date(
+                  trip.createdAt
+                ).toLocaleDateString()}
+              </p>
+
               <button
-                onClick={handleDelete}
+                onClick={(e) =>
+                  handleDelete(trip._id, e)
+                }
                 className="
-    bg-red-600
-    hover:bg-red-700
-    text-white
-    px-4
-    py-2
-    rounded-xl
-    mt-4
-  "
+                  bg-red-600
+                  hover:bg-red-700
+                  text-white
+                  px-4
+                  py-2
+                  rounded-xl
+                "
               >
                 Delete Trip
               </button>
-
-              <p className="text-slate-400 mt-2">
-                {new Date(trip.createdAt).toLocaleDateString()}
-              </p>
             </div>
           ))}
         </div>
