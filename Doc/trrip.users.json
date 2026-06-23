@@ -1,0 +1,90 @@
+[{
+  "_id": {
+    "$oid": "6a315f8a00b8a5999586362f"
+  },
+  "name": "Parth",
+  "email": "parth@panchal",
+  "password": "$2b$10$YSwx2G3cMn78Fxmo/hnCBO5st80S9uJP7KLXkCr267vVS50yg/rQy",
+  "createdAt": {
+    "$date": "2026-06-16T14:36:58.737Z"
+  },
+  "updatedAt": {
+    "$date": "2026-06-16T14:36:58.737Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a351e2c6b17b4b0cc0fbaf9"
+  },
+  "name": "Arjun Panchal",
+  "email": "arjun@panchal",
+  "password": "$2b$10$BNEMxfK.l5n6ZMEU4.p13O6TGA2JbK422tnQj7k4HU41XeG/gFIAC",
+  "createdAt": {
+    "$date": "2026-06-19T10:47:08.880Z"
+  },
+  "updatedAt": {
+    "$date": "2026-06-19T10:47:08.880Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a351e756b17b4b0cc0fbafa"
+  },
+  "name": "Antra Sharma",
+  "email": "antra@sharma",
+  "password": "$2b$10$VlJ7OrEFYrfl1DEi3hMTOe5XVCzdQlqYmaZ14ad9/fflLVKCxwTUq",
+  "createdAt": {
+    "$date": "2026-06-19T10:48:21.800Z"
+  },
+  "updatedAt": {
+    "$date": "2026-06-19T10:48:21.800Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a351ef46b17b4b0cc0fbafb"
+  },
+  "name": "Ankita Singh",
+  "email": "ankita@singh",
+  "password": "$2b$10$KNCy2ho0JGz3L1VdKgbPVO9e2OEyDc/wOQv6sN1CotxRy8TPcdOZ.",
+  "createdAt": {
+    "$date": "2026-06-19T10:50:28.599Z"
+  },
+  "updatedAt": {
+    "$date": "2026-06-19T10:50:28.599Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a36161e34758667a174f671"
+  },
+  "name": "Ryu Panchal",
+  "email": "ryu@panchal",
+  "password": "$2b$10$IWS3lm5B/azBNWpZivkdKeMCeOIanOl4m8557pjOzSZaY5W33I66u",
+  "createdAt": {
+    "$date": "2026-06-20T04:25:02.810Z"
+  },
+  "updatedAt": {
+    "$date": "2026-06-20T04:25:02.810Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a363071573cffa11f6a2f52"
+  },
+  "name": "Ravi Panchal",
+  "email": "ravi@panchal",
+  "password": "$2b$10$bFB0HhJvAKZB5qebu6cHPOmtSW9U5XXePYhUiNEJ6uJ5X4jWLz292",
+  "createdAt": {
+    "$date": "2026-06-20T06:17:21.708Z"
+  },
+  "updatedAt": {
+    "$date": "2026-06-20T06:17:21.708Z"
+  },
+  "__v": 0
+}]
