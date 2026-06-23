@@ -18,7 +18,16 @@ const app = express();
 connectDB();
 
 // Allow front-end talk to back-end
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://your-vercel-app.vercel.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 // Understand JSON data sent by frontend.
 app.use(express.json());
