@@ -35,8 +35,10 @@ const registerUser = async (req, res) => {
 
     // throwing error
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
-      message: error.message,
+      message: "Internal Server Error",
     });
   }
 };
@@ -71,8 +73,10 @@ const loginUser = async (req, res) => {
       token,
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
-      message: error.message,
+      message: "Internal Server Error",
     });
   }
 };

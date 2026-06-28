@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-console.log("ENV TEST:", process.env.MONGO_URL);
 const express = require("express");
 const cors = require("cors");
 // Importing the config file
@@ -10,7 +9,6 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const uploadRoutes = require("./routes/uploadRoutes")
 const protect = require("./middleware/authMiddleware");
-const { verify } = require("jsonwebtoken");
 const itineraryRoutes = require("./routes/itineraryRoutes");
 // Create our server
 const app = express();
@@ -22,7 +20,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://trrip-ai-itinerary-generator.vercel.app/"
+      "https://trrip-ai-itinerary-generator.vercel.app"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
