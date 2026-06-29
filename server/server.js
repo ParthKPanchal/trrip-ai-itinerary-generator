@@ -20,7 +20,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://trrip-ai-itinerary-generator.vercel.app"
+      "https://trrip-ai-itinerary-generator.vercel.app",
+      "https://trrip-ai-itinerary-generator-parthkpanchals-projects.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
